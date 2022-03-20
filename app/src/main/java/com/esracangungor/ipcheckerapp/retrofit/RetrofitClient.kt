@@ -9,7 +9,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object RetrofitClient {
     private const val BASE_URL = "http://checkip.amazonaws.com/"
     private val retrofitClient: Retrofit.Builder by lazy {
-
         val gson = GsonBuilder()
             .setLenient()
             .create()
