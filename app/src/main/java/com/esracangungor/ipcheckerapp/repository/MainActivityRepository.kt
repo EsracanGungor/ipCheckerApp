@@ -3,34 +3,30 @@ package com.esracangungor.ipcheckerapp.repository
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.esracangungor.ipcheckerapp.retrofit.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.observers.DisposableSingleObserver
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 object MainActivityRepository {
     private val serviceSetterGetter = MutableLiveData<String>()
+    private val disposable = CompositeDisposable()
 
     fun getServicesApiCall(): MutableLiveData<String> {
-
-        val call = RetrofitClient.apiInterface.getData()
-
-        call.enqueue(object: Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.v("DEBUG : ", t.message.toString())
-            }
-
-            override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
-            ) {
-                Log.v("DEBUG : ", response.body().toString())
-                val data = response.body()
-                val msg = data.toString()
-                serviceSetterGetter.value = msg
-            }
-        })
-
+        disposable.add(
+            RetrofitClient.apiInterface.getData()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<String>(){
+                    override fun onSuccess(t: String) {
+                        serviceSetterGetter.value =t
+                    }
+                    override fun onError(e: Throwable) {
+                        Log.v("DEBUG : ", e.message.toString())
+                    }
+                })
+        )
         return serviceSetterGetter
     }
 }
