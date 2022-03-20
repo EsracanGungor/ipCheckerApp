@@ -11,7 +11,7 @@ A simple ip check  app in Kotlin, Android using retrofit, in different branches 
  
  ## Functionality
 The app's functionality includes:
-1. Fetch ip information from (http://checkip.amazonaws.com/) and shows them in textview when user click the button.
+ Fetch ip information from (http://checkip.amazonaws.com/) and shows them in textview when user click the button.
 
 ## Tech Stack & Open-source Libraries
 - Minimum SDK level 21
